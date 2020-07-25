@@ -20,8 +20,8 @@
       <tr v-for="(todo in filteredTodos" v-bind:key="todo.id">
         <td>{{ todo.id }}</td>
         <td>{{ todo.title }}</td>
-        <td><button @click="statusChange(todo.id)">{{ todo.statusBtn }}</button></td>
-        <td><button @click="deleteTask(todo.id)">{{ todo.delBtn }}</button></td>
+        <td><button @click="statusChange(todo)">{{ todo.statusBtn }}</button></td>
+        <td><button @click="deleteTask(todo)">{{ todo.delBtn }}</button></td>
       </tr>
     </table>
     <h2>新規タスクの追加</h2>
@@ -66,23 +66,17 @@
           );
           this.newTask = '';
         },
-        statusChange: function (id) {
-          for (let todo of this.todos) {
-            if (todo.id === id) {
-              if (todo.statusBtn === '作業中') {
-                return todo.statusBtn = '完了'
-              } else {
-                return todo.statusBtn = '作業中'
-              }
-              break
-            }
+        statusChange: function (todo) {
+          if (todo.statusBtn === '作業中') {
+            return todo.statusBtn = '完了'
+          } else {
+            return todo.statusBtn = '作業中'
           }
         },
-        deleteTask: function (smt) {
-          let index = this.todos.indexOf(smt)
-          this.todos.splice(index, 1);
-          this.todos.forEach((todo, index) =>
-            todo.id = index
+        deleteTask: function (todo) {
+          this.todos.splice(todo, 1);
+          this.todos.forEach((todo, id) =>
+            todo.id = id
           );
         }
       }
