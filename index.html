@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ToDo List Vue-version</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <h2>ToDoリスト</h2>
+  <div id="app">
+    <label><input type="radio" name="list" value="all" v-model="filter">すべて</label>
+    <label><input type="radio" name="list" value="active" v-model="filter">作業中</label>
+    <label><input type="radio" name="list" value="completed" v-model="filter">完了</label>
+    <p>ID コメント 状態</p>
+
+    <table>
+      <tr v-for="(todo in filteredTodos" v-bind:key="todo.id">
+        <td>{{ todo.id }}</td>
+        <td>{{ todo.title }}</td>
+        <td><button @click="statusChange(todo)">{{ todo.statusBtn }}</button></td>
+        <td><button @click="deleteTask(todo)">{{ todo.delBtn }}</button></td>
+      </tr>
+    </table>
+    <h2>新規タスクの追加</h2>
+    <form @submit.prevent="addTask">
+      <input type="text" v-model="newTask">
+      <input type="submit" value="追加" class="button">
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    'use strict';
+
+    new Vue({
+      el: '#app',
+      data: {
+        id: 0, statusBtn: '', newTask: '', todos: [], filter: 'all'
+      },
+      computed: {
+        filteredTodos() {
+          if (this.filter === 'all') {
+            return this.todos
+          } else if (this.filter === 'completed') {
+            return this.todos.filter((todo) => {
+              return todo.statusBtn === '完了'
+            })
+          } else if (this.filter === 'active') {
+            return this.todos.filter((todo) => {
+              return todo.statusBtn === '作業中'
+            })
+          }
+        }
+      },
+      methods: {
+        addTask: function () {
+          let item = {
+            title: this.newTask, statusBtn: '作業中', delBtn: '削除'
+          }
+          this.todos.push(item);
+          this.todos.forEach((todo, index) =>
+            todo.id = index
+          );
+          this.newTask = '';
+        },
+        statusChange: function (todo) {
+          if (todo.statusBtn === '作業中') {
+            return todo.statusBtn = '完了'
+          } else {
+            return todo.statusBtn = '作業中'
+          }
+        },
+        deleteTask: function (todo) {
+          this.todos.splice(todo, 1);
+          this.todos.forEach((todo, id) =>
+            todo.id = id
+          );
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
